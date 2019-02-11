@@ -8,7 +8,7 @@ cues_dir = '/Users/Rachael/Documents/school/grad_school/first_year/adcock_rotati
 cd(data_dir);
 subjects = dir(strcat(data_dir,'tes*'));
 plat = imread(strcat(cues_dir,'platform.png')); %load platform template
-center = imread(strcat(cues_dir,'maze3.png')); %load center of environment template (working: maze.png)
+center = imread(strcat(cues_dir,'maze.png')); %load maze template
 
 data = []; 
 
@@ -20,19 +20,21 @@ for i=1:(length(subjects))
     files = dir('Env*.PNG');
 
     for ii=1:length(files)
+        j = strsplit(files(ii).name, '.');
+        env = j{1};
+        
         I = imread(files(ii).name);
         center_coordinates = find_objects(I,center);
         
         plat_coordinates = find_objects(I,plat);
-        plat_coordinates(1) = plat_coordinates(1) - center_coordinates(1); %shift coordinates relative to center of environment
+        plat_coordinates(1) = plat_coordinates(1) - center_coordinates(1); %shift coordinates relative to center of maze
         plat_coordinates(2) = plat_coordinates(2) - center_coordinates(2);
         
-        j = strsplit(files(ii).name, '.');
-        env = j{1};
-
         cues = dir(strcat(cues_dir,env,'/','c*.png'));
-
         for iii=1:length(cues)
+            k = strsplit(cues(iii).name, '.');
+            cue_name = k{1};
+            
             object = imread(strcat(cues(iii).folder,'/',cues(iii).name));
 
             cue_coordinates = find_objects(I,object);
@@ -40,13 +42,9 @@ for i=1:(length(subjects))
             cue_coordinates(2) = cue_coordinates(2) - center_coordinates(2);
 
             dist = pdist2(plat_coordinates,cue_coordinates, 'euclidean'); %euclidean distance
-            %cos = 1 - (pdist2(plat_coordinates,cue_coordinates,'cosine')); %pdist2 outputs cosine distance; 1-cosine_similarity = cosine distance
-            a = atan2d(plat_coordinates(1)*cue_coordinates(2)-plat_coordinates(2)*cue_coordinates(1),plat_coordinates(1)*cue_coordinates(1)+plat_coordinates(2)*cue_coordinates(2));
+            angle = atan2d(plat_coordinates(1)*cue_coordinates(2)-plat_coordinates(2)*cue_coordinates(1),plat_coordinates(1)*cue_coordinates(1)+plat_coordinates(2)*cue_coordinates(2)); %relative angle between platform and cue, atan2d(x1*y2-y1*x2,x1*x2+y1*y2)
            
-            k = strsplit(cues(iii).name, '.');
-            cue_name = k{1};
-
-            data = [data; {files(ii).name} {subjects(i).name}, {env}, {cue_name}, {cue_coordinates}, {plat_coordinates}, {dist}, {a}];
+            data = [data; {subjects(i).name}, {env}, {cue_name}, {cue_coordinates}, {plat_coordinates}, {dist}, {angle}];
 
             %run scoring function (not written yet)
 
@@ -56,5 +54,4 @@ end
 cd('..');
 
 end
-
 toc; %stop timer

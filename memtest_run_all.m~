@@ -8,7 +8,7 @@ cues_dir = '/Users/Rachael/Documents/school/grad_school/first_year/adcock_rotati
 cd(data_dir);
 subjects = dir(strcat(data_dir,'tes*'));
 plat = imread(strcat(cues_dir,'platform.png')); %load platform template
-center = imread(strcat(cues_dir,'maze3.png')); %load center of environment template (working: maze.png)
+center = imread(strcat(cues_dir,'maze.png')); %load maze template
 
 data = []; 
 
