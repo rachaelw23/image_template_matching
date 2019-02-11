@@ -76,7 +76,5 @@ elseif max(c(:)) < 0.8 %if image not found, check different rotations
             end
         end  
     end
-     
     coordinates = [xCenter,yCenter];
-
 end

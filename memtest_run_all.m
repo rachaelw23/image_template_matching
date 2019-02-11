@@ -49,9 +49,7 @@ for i=1:(length(subjects))
             %run scoring function (not written yet)
 
         end
-end
-
+    end
 cd('..');
-
 end
 toc; %stop timer
